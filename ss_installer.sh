@@ -28,19 +28,19 @@ function mainSetup
         pip install shadowsocks
 
         echo "开始写ss配置文件..."
-        echo -e "{" > ~/ss.json
+        echo -e "{" > /ss.json
         resultVar=$(ifconfig | grep "inet addr" | grep -v "127.0.0.1" | awk '{print $2}' | awk -F ':' '{print $2}')
         echo "获取到的本机ip为:   [$resultVar]"
-        echo -e "\t\"server\":\"$resultVar\"," >> ~/ss.json
-        echo -e "\t\"server_port\":8388," >> ~/ss.json
-        echo -e "\t\"local_address\":\"127.0.0.1\"," >> ~/ss.json
-        echo -e "\t\"local_port\":1080," >> ~/ss.json
-        echo -e "\t\"password\":\"FUCKGFW\"," >> ~/ss.json
-        echo -e "\t\"timeout\":300," >> ~/ss.json
-        echo -e "\t\"method\":\"rc4-md5\"" >> ~/ss.json
-        echo -e "}" >> ~/ss.json
+        echo -e "\t\"server\":\"$resultVar\"," >> /ss.json
+        echo -e "\t\"server_port\":8388," >> /ss.json
+        echo -e "\t\"local_address\":\"127.0.0.1\"," >> /ss.json
+        echo -e "\t\"local_port\":1080," >> /ss.json
+        echo -e "\t\"password\":\"FUCKGFW\"," >> /ss.json
+        echo -e "\t\"timeout\":300," >> /ss.json
+        echo -e "\t\"method\":\"rc4-md5\"" >> /ss.json
+        echo -e "}" >> /ss.json
         echo "配置文件编写完毕,启动ssserver..."
-        ssserver -c ~/ss.json -d restart
+        ssserver -c /ss.json -d restart
         echo "设置开机自动启动ssserver...."
         setInitRestart
 }
@@ -59,10 +59,10 @@ function setInitRestart
                 linenum=$(echo $testvar | awk "{print \$$totalnum}")
                 echo "最后一个exit 0所在位置是第$linenum 行"
                 echo "在exit 0之前添加ss启动任务..."
-                sed -i "${linenum}c ssserver -c ~/ss.json -d restart \nexit 0" /etc/rc.local
+                sed -i "${linenum}c ssserver -c /ss.json -d restart \nexit 0" /etc/rc.local
         else
                 echo "rc.local不存在,开始新建rc.local"
-                echo -e "#! /bin/bash\nssserver -c ~/ss.json -d restart\nexit 0" > /etc/rc.local
+                echo -e "#! /bin/bash\nssserver -c /ss.json -d restart\nexit 0" > /etc/rc.local
                 chmod 755 /etc/rc.local
         fi
 }
